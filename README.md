@@ -37,3 +37,10 @@ The payload is returned as a `Buffer` subarray of the input, not a copy, so it i
 ## Edge cases
 
 Options are returned as a raw `Buffer` of the bytes between the fixed header and the payload. They are not parsed into individual option records, because option semantics differ per option and most callers only need the byte count. `payloadOffset` is the offset where the payload begins, which is also `ihl * 4`.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
